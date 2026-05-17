@@ -44,9 +44,9 @@ app.get('/api/login', (req, res) => {
       const user = results[0]
       res.json({ result: true, message: 'Вы авторизовались', userID: user.id_user, role: user.role })
     }
-      else{
-        res.json({ result: false, message: 'Неправельный логин или пароль' })
-      }
+    else {
+      res.json({ result: false, message: 'Неправельный логин или пароль' })
+    }
   })
 })
 
@@ -61,12 +61,12 @@ app.get('/api/requests', (req, res) => {
     if (results.length === 0) {
       return res.json({ result: false, message: "У вас нет действующих заявок" })
     }
-      res.json({ result: true, message: "Ваши заявки", requests: results })
+    res.json({ result: true, message: "Ваши заявки", requests: results })
   })
 })
 
 // Создание заявки
-app.post('/api/requests/', (req, res) => {
+app.post('/api/requests', (req, res) => {
   const { id_user, id_course, start_date, payment, } = req.body
 
   if (!id_course) {
@@ -83,25 +83,27 @@ app.post('/api/requests/', (req, res) => {
   if (selectedDate < today) {
     return res.json({ result: false, message: 'Нельзя выбрать прошедшую дату' })
   }
-    db.query('INSERT INTO requests(id_user, id_course, start_date, payment, id_status) VALUES (?, ?, ?, ?, 1)', [id_user, id_course, start_date, payment], (err, results) => {
-      if (err) {
-        return res.json({ result: false, message: 'Ошибка БД' })
-      }
+  db.query('INSERT INTO requests(id_user, id_course, start_date, payment, id_status) VALUES (?, ?, ?, ?, 1)', [id_user, id_course, start_date, payment], (err, results) => {
+    if (err) {
+      return res.json({ result: false, message: 'Ошибка БД' })
+    }
 
-      {
-        res.json({ result: true, message: 'Ваша заявка принята' })
-      }
-    })
+    {
+      res.json({ result: true, message: 'Ваша заявка принята' })
+    }
+  })
 })
 
 // Получение списка курсов
 app.get('/api/courses', (req, res) => {
-  db.query('SELECT * FROM courses', (err, results) =>{
-    
+  db.query('SELECT * FROM courses', (err, results) => {
+
     if (err) {
       return res.json({ result: false, message: 'Ошибка БД' })
     }
-      res.json({ result: true, message: 'Список курсов получен', courses: results})
+    else {
+      res.json({ result: true, message: 'Список курсов получен', courses: results })
+    }
   })
 })
 
@@ -111,21 +113,21 @@ app.get('/api/admin/requests', (req, res) => {
     if (err) {
       return res.json({ result: false, message: 'Ошибка БД' })
     }
-      res.json({ result: true, message: 'Список заявок получен', request: results})
+    res.json({ result: true, message: 'Список заявок получен', request: results })
   })
 })
 
 // Админ: смена статуса
 
 app.put('/api/admin/request/:id', (req, res) => {
-  const {id_status} = req.body
-  const {id} = req.params
+  const { id_status } = req.body
+  const { id } = req.params
 
-  db.query('UPDATE requests SET id_status = ? WHERE id_request = ?', [id_status, id], (err, results)=>{
+  db.query('UPDATE requests SET id_status = ? WHERE id_request = ?', [id_status, id], (err, results) => {
     if (err) {
       return res.json({ result: false, message: 'Ошибка БД' })
     }
-    res.json({ result: true, message: 'Статус обнавлён'})
+    res.json({ result: true, message: 'Статус обнавлён' })
   }
   )
 })
@@ -133,17 +135,17 @@ app.put('/api/admin/request/:id', (req, res) => {
 // Добавить отзыв
 
 app.put('/api/requests/:id/review', (req, res) => {
-  const {review} = req.body
-  const {id} = req.params
+  const { review } = req.body
+  const { id } = req.params
 
   if (review.length === 0) {
-    return res.json({ result: false, message: 'Обязательно для заполнения'})
+    return res.json({ result: false, message: 'Обязательно для заполнения' })
   }
-  db.query('UPDATE requests SET review = ? WHERE id_request = ?', [review, id], (err, results) =>{
+  db.query('UPDATE requests SET review = ? WHERE id_request = ?', [review, id], (err, results) => {
     if (err) {
       return res.json({ result: false, message: 'Ошибка БД' })
     }
-    res.json({ result: true, message: 'Отзыв отправлен'})
+    res.json({ result: true, message: 'Отзыв отправлен' })
   })
 })
 
