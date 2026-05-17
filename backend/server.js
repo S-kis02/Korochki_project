@@ -12,7 +12,7 @@ app.use(cors())
 // Регистрация
 app.post('/api/regis', (req, res) => {
   const { login, password, full_name, phone, email } = req.body;
-
+  
   if (!login || !password || !full_name || !phone || !email) {
     return res.json({ result: false, message: 'Все поля обязательны для заполнения' })
   }
@@ -26,7 +26,7 @@ app.post('/api/regis', (req, res) => {
       if (err) {
         return res.json({ result: false, message: 'Ошбика при регистрации' })
       }
-      res.json({ result: true, message: 'Регистрация успешна' })
+      res.json({ result: true, message: 'Регистрация успешна', userId: results.insertId, role: 'user' })
     })
 
   })
@@ -42,7 +42,7 @@ app.get('/api/login', (req, res) => {
     }
     if (results.length > 0) {
       const user = results[0]
-      res.json({ result: true, message: 'Вы авторизовались', userID: user.id_user, role: user.role })
+      res.json({ result: true, message: 'Вы авторизовались', userId: user.id_user, role: user.role })
     }
     else {
       res.json({ result: false, message: 'Неправельный логин или пароль' })
@@ -54,7 +54,7 @@ app.get('/api/login', (req, res) => {
 app.get('/api/requests', (req, res) => {
   const { id_user } = req.query
 
-  db.query('SELECT * FROM requests WHERE id_user = ?', [id_user], (err, results) => {
+  db.query('SELECT r.*, c.name as course_name, s.name as status_name FROM requests r JOIN courses c ON r.id_course = c.id_course JOIN statuses s ON r.id_status = s.id_status WHERE r.id_user = ? ', [id_user], (err, results) => {
     if (err) {
       return res.json({ result: false, message: "Ошибка БД" })
     }
@@ -67,30 +67,32 @@ app.get('/api/requests', (req, res) => {
 
 // Создание заявки
 app.post('/api/requests', (req, res) => {
-  const { id_user, id_course, start_date, payment, } = req.body
+  const { id_user, id_course, start_date, payment } = req.body
+  const validStartDate = start_date ? start_date : null
 
   if (!id_course) {
     return res.json({ result: false, message: 'Выберите курс' })
   }
-
   if (!payment) {
     return res.json({ result: false, message: 'Выберите способ оплаты' })
   }
 
-  const today = new Date()
-  const selectedDate = new Date(start_date)
-  today.setHours(0, 0, 0, 0)
-  if (selectedDate < today) {
-    return res.json({ result: false, message: 'Нельзя выбрать прошедшую дату' })
+  if (start_date) {
+    const today = new Date()
+    const selectedDate = new Date(start_date)
+    today.setHours(0, 0, 0, 0)
+    if (selectedDate < today) {
+      return res.json({ result: false, message: 'Нельзя выбрать прошедшую дату' })
+    }
   }
-  db.query('INSERT INTO requests(id_user, id_course, start_date, payment, id_status) VALUES (?, ?, ?, ?, 1)', [id_user, id_course, start_date, payment], (err, results) => {
+
+  db.query('INSERT INTO requests(id_user, id_course, start_date, payment, id_status) VALUES (?, ?, ?, ?, 1)', 
+    [id_user, id_course, validStartDate, payment], (err) => {
     if (err) {
+      console.log('MySQL ошибка:', err)
       return res.json({ result: false, message: 'Ошибка БД' })
     }
-
-    {
-      res.json({ result: true, message: 'Ваша заявка принята' })
-    }
+    res.json({ result: true, message: 'Ваша заявка принята' })
   })
 })
 
@@ -109,7 +111,7 @@ app.get('/api/courses', (req, res) => {
 
 // Админ: все заявки
 app.get('/api/admin/requests', (req, res) => {
-  db.query('SELECT requests.*, users.full_name, courses.name, statuses.name FROM requests JOIN users ON requests.id_user = users.id_user JOIN courses ON requests.id_course = courses.id_course JOIN statuses ON requests.id_status = statuses.id_status;', (err, results) => {
+  db.query('SELECT requests.*, courses.name, statuses.name FROM requests JOIN courses ON requests.id_course = courses.id_course JOIN statuses ON requests.id_status = statuses.id_status', (err, results) => {
     if (err) {
       return res.json({ result: false, message: 'Ошибка БД' })
     }

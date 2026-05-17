@@ -20,6 +20,7 @@ export function Reg() {
     }
 
     const addUser = async (e) => {
+        
         e.preventDefault()
         let response = await fetch('http://localhost:3000/api/regis', {
             method: 'POST',
@@ -33,7 +34,9 @@ export function Reg() {
 
         if (data.result) {
             alert(data.message)
-            navigate('/auto')
+            localStorage.setItem('userId', data.userId)
+            localStorage.setItem('role', data.role)
+            navigate('/home')
         }
         else {
             alert(data.message)
