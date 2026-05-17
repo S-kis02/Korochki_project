@@ -35,10 +35,8 @@ DROP DATABASE korochki;
 	FOREIGN KEY (id_status) REFERENCES statuses(id_status)
 	);
 
-SELECT requests.*, users.full_name, courses.name, statuses.name FROM requests
-JOIN id_user ON requests.id_user = users.id_user
-JOIN id_course ON requests.id_course = courses.id_course
-JOIN id_status ON statuses.id_status = statuses.id_status;
+SELECT * FROM users;
+
 
 	INSERT INTO statuses(name) VALUES
 	('Новое'), ('Идёт обучение'), ('Обучение завершено');
