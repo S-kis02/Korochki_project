@@ -44,7 +44,9 @@ app.get('/api/login', (req, res) => {
       const user = results[0]
       res.json({ result: true, message: 'Вы авторизовались', userID: user.id_user, role: user.role })
     }
-      res.json({ result: false, message: 'Неправельный логин или пароль' })
+      else{
+        res.json({ result: false, message: 'Неправельный логин или пароль' })
+      }
   })
 })
 

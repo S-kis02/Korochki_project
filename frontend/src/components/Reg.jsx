@@ -9,7 +9,7 @@ export function Reg() {
         phone: '',
         email: '',
         login: '',
-        password: '',
+        password: ''
     })
 
     const handleChange = (e) => {
@@ -32,14 +32,19 @@ export function Reg() {
         let data = await response.json();
 
         if (data.result) {
-            alert('Регистрация успешна!')
-            navigate('/login')
+            alert(data.message)
+            navigate('/auto')
         }
         else {
             alert(data.message)
         }
     }
 
+    const autoGo = (e) => {
+        e.preventDefault()
+        navigate('/login')
+    }
+    
     return (
         <div>
             <h1>Регистрация</h1>
@@ -51,6 +56,8 @@ export function Reg() {
                 <input type="password" placeholder="Придумайте пароль" name="password" onChange={handleChange} value={newUser.password} />
                 <button type="submit">Зарегистрироваться</button>
             </form>
+            <p>Уже зарегестрированы?</p>
+            <button onClick={autoGo}>Войти</button>
         </div>
     )
 }
