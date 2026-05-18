@@ -3,7 +3,7 @@ DROP DATABASE korochki;
 
 	CREATE TABLE statuses (
 	id_status INT PRIMARY KEY AUTO_INCREMENT,
-	name VARCHAR(50) NOT NULL
+	name_statuses VARCHAR(50) NOT NULL
 	);
 
 	CREATE TABLE users (
@@ -18,14 +18,14 @@ DROP DATABASE korochki;
 
 	CREATE TABLE courses (
 	id_course INT PRIMARY KEY AUTO_INCREMENT,
-	name VARCHAR(100) NOT NULL
+	name_courses VARCHAR(100) NOT NULL
 	);
 
 	CREATE TABLE requests(
 	id_request INT PRIMARY KEY AUTO_INCREMENT,
 	id_user INT NOT NULL,
 	id_course INT NOT NULL,
-	start_date DATE NOT NULL,
+	start_date DATE,
 	id_status INT DEFAULT 1,
 	review TEXT,
     payment ENUM('cash', 'transfer') NOT NULL,
@@ -37,11 +37,16 @@ DROP DATABASE korochki;
 
 SELECT * FROM users;
 
+SELECT requests.*, courses.name_courses, statuses.name_statuses FROM requests 
+JOIN courses ON requests.id_course = courses.id_course 
+JOIN statuses ON requests.id_status = statuses.id_status;
 
-	INSERT INTO statuses(name) VALUES
+ 
+
+	INSERT INTO statuses(name_statuses) VALUES
 	('Новое'), ('Идёт обучение'), ('Обучение завершено');
 
-	INSERT INTO courses(name) VALUES 
+	INSERT INTO courses(name_courses) VALUES 
 	('Основы алгоритмизации и программирования'), ('Основы веб-дизайна'), ('Основы проектирования баз данных');
 
 	INSERT INTO users(login, password, full_name, phone, email, role) VALUES 

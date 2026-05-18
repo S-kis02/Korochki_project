@@ -12,7 +12,7 @@ app.use(cors())
 // Регистрация
 app.post('/api/regis', (req, res) => {
   const { login, password, full_name, phone, email } = req.body;
-  
+
   if (!login || !password || !full_name || !phone || !email) {
     return res.json({ result: false, message: 'Все поля обязательны для заполнения' })
   }
@@ -54,7 +54,7 @@ app.get('/api/login', (req, res) => {
 app.get('/api/requests', (req, res) => {
   const { id_user } = req.query
 
-  db.query('SELECT r.*, c.name as course_name, s.name as status_name FROM requests r JOIN courses c ON r.id_course = c.id_course JOIN statuses s ON r.id_status = s.id_status WHERE r.id_user = ? ', [id_user], (err, results) => {
+  db.query('SELECT requests.*, courses.name_courses, statuses.name_statuses FROM requests JOIN courses ON requests.id_course = courses.id_course JOIN statuses ON requests.id_status = statuses.id_status WHERE requests.id_user = ?', [id_user], (err, results) => {
     if (err) {
       return res.json({ result: false, message: "Ошибка БД" })
     }
@@ -86,14 +86,16 @@ app.post('/api/requests', (req, res) => {
     }
   }
 
-  db.query('INSERT INTO requests(id_user, id_course, start_date, payment, id_status) VALUES (?, ?, ?, ?, 1)', 
+  db.query('INSERT INTO requests(id_user, id_course, start_date, payment, id_status) VALUES (?, ?, ?, ?, 1)',
     [id_user, id_course, validStartDate, payment], (err) => {
-    if (err) {
-      console.log('MySQL ошибка:', err)
-      return res.json({ result: false, message: 'Ошибка БД' })
-    }
-    res.json({ result: true, message: 'Ваша заявка принята' })
-  })
+      if (err) {
+        console.log('MySQL ошибка:', err)
+        return res.json({ result: false, message: 'Ошибка БД' })
+      }
+      else{
+      res.json({ result: true, message: 'Ваша заявка принята' })
+      }
+    })
 })
 
 // Получение списка курсов
@@ -111,11 +113,16 @@ app.get('/api/courses', (req, res) => {
 
 // Админ: все заявки
 app.get('/api/admin/requests', (req, res) => {
-  db.query('SELECT requests.*, courses.name, statuses.name FROM requests JOIN courses ON requests.id_course = courses.id_course JOIN statuses ON requests.id_status = statuses.id_status', (err, results) => {
+  db.query('SELECT requests.*, users.full_name, users.phone, courses.name_courses, statuses.name_statuses FROM requests JOIN users ON requests.id_user = users.id_user JOIN courses ON requests.id_course = courses.id_course JOIN statuses ON requests.id_status = statuses.id_status', (err, results) => {
     if (err) {
       return res.json({ result: false, message: 'Ошибка БД' })
     }
-    res.json({ result: true, message: 'Список заявок получен', request: results })
+    if (results.length > 0) {
+      res.json({ result: true, message: 'Список заявок:', requests: results })
+    }
+    else {
+      res.json({result: false, message: 'Нету активных заявок'})
+    }
   })
 })
 

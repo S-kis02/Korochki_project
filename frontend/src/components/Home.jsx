@@ -36,7 +36,7 @@ export function Home() {
     return (
         <div>
             <button onClick={exit}>Выйти</button>
-            <h1>Вы вошли!</h1>
+            <h1>Ваши заявки</h1>
             <p>{message}</p>
             {requests.length > 0 && (<table border='1'>
                 <thead>
@@ -45,9 +45,9 @@ export function Home() {
                 <tbody>
                     {requests.map(req => (
                         <tr key={req.id_request}>
-                            <td>{req.course_name}</td>
+                            <td>{req.name_courses}</td>
                             <td>{req.start_date ? new Date(req.start_date).toLocaleDateString('ru-RU') : 'Не указана'}</td>
-                            <td>{req.status_name}</td>
+                            <td>{req.name_statuses}</td>
                         </tr>
                     ))}
                 </tbody>
