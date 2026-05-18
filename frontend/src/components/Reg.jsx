@@ -53,7 +53,7 @@ export function Reg() {
             <h1>Регистрация</h1>
             <form onSubmit={addUser}>
                 <input type="text" placeholder="Введите ФИО" name="full_name" onChange={handleChange} value={newUser.full_name} />
-                <input type="text" placeholder="Введите номер телефона" name="phone" onChange={handleChange} value={newUser.phone} />
+                <input type="text" placeholder="8(XXX)XXX-XX-XX" name="phone" onChange={handleChange} value={newUser.phone} />
                 <input type="email" placeholder="Введите email" name="email" onChange={handleChange} value={newUser.email} />
                 <input type="text" placeholder="Придумайте логин" name="login" onChange={handleChange} value={newUser.login} />
                 <input type="password" placeholder="Придумайте пароль" name="password" onChange={handleChange} value={newUser.password} />

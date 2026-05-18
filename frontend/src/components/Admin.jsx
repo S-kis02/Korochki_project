@@ -47,7 +47,7 @@ export function Admin() {
             <h1>{message}</h1>
             {applications.length > 0 && (<table border='1' >
                 <thead>
-                    <tr><td>ФИО подавшего</td><td>Телефон</td><td>Дата</td><td>Время бронирования</td><td>Выбранный мастер</td><td>Статус</td></tr>
+                    <tr><td>ФИО подавшего</td><td>Телефон</td><td>Дата</td><td>Время бронирования</td><td>Выбранный мастер</td><td>Статус</td><td>Отзыв</td></tr>
                 </thead>
                 <tbody>
                     {applications.map(app => (
@@ -62,6 +62,7 @@ export function Admin() {
                                 <option value="2">Идёт обучение</option>
                                 <option value="3">Обучение завершено</option>
                             </select>
+                            <td>{app.review || '—'}</td>
                         </tr>
                     ))}
                 </tbody>

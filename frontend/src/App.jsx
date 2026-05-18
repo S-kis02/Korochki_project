@@ -4,6 +4,8 @@ import { Login } from './components/Login.jsx'
 import { Admin } from './components/Admin.jsx'
 import { NewRequest } from './components/NewRequest.jsx'
 import { Routes, Route } from 'react-router-dom'
+import './App.css'
+
 
 export default function App() {
     return (

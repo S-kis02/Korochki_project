@@ -17,6 +17,11 @@ export function NewRequest() {
             [e.target.name]: e.target.value
         })
     }
+
+    const exit = (e) => {
+        e.preventDefault()
+        navigate('/home')
+    }
     
     const newRequest = async (e) => {
         e.preventDefault()
@@ -65,6 +70,7 @@ export function NewRequest() {
                 </select>
                 <button type="submit">Отправить</button>
             </form>
+            <button onClick={exit}>Отменить заявку</button>
         </div>
     )
 }
