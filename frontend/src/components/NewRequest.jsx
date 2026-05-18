@@ -5,6 +5,9 @@ export function NewRequest() {
     const navigate = useNavigate()
     const userId = localStorage.getItem('userId')
 
+    const [courseError, setCourseError] = useState('')
+    const [paymentError, setPaymentError] = useState('')
+
     const [dataRequest, setdataRequest] = useState({
         id_course: '',
         start_date: '',
@@ -22,9 +25,24 @@ export function NewRequest() {
         e.preventDefault()
         navigate('/home')
     }
-    
+
     const newRequest = async (e) => {
         e.preventDefault()
+
+        let isValid = true
+
+        if (!dataRequest.id_course) {
+            setCourseError('Выберите курс')
+            isValid = false
+        } else setCourseError('')
+
+        if (!dataRequest.payment) {
+            setPaymentError('Выберите способ оплаты')
+            isValid = false
+        } else setPaymentError('')
+
+        if (!isValid) return
+
         const requestData = {
             id_user: userId,
             id_course: dataRequest.id_course,
@@ -60,6 +78,7 @@ export function NewRequest() {
                     <option value="2">Основы веб-дизайна</option>
                     <option value="3">Основы проектирования баз данных</option>
                 </select>
+                {courseError && <p style={{color:'red'}}>{courseError}</p>}
                 <p>Примерная дата начала обучения(не обязательно)</p>
                 <input type="date" name="start_date" onChange={handleChange} value={dataRequest.start_date} />
                 <p>Способ оплаты</p>
@@ -68,9 +87,10 @@ export function NewRequest() {
                     <option value="cash">Наличные</option>
                     <option value="transfer">Перевод по номеру телефона</option>
                 </select>
-                <button type="submit">Отправить</button>
+                {paymentError && <p style={{color:'red'}}>{paymentError}</p>}
+                <button type="submit" className="btn">Отправить</button>
             </form>
-            <button onClick={exit}>Отменить заявку</button>
+            <button onClick={exit} className="btn">Отменить заявку</button>
         </div>
     )
 }

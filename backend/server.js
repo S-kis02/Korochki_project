@@ -24,7 +24,7 @@ app.post('/api/regis', (req, res) => {
 
     db.query('INSERT INTO users(login, password, full_name, phone, email, role) VALUES(?, ?, ?, ?, ?, ?)', [login, password, full_name, phone, email, "user"], (err, results) => {
       if (err) {
-        return res.json({ result: false, message: 'Ошбика при регистрации' })
+        return res.json({ result: false, message: 'Ошибка при регистрации' })
       }
       res.json({ result: true, message: 'Регистрация успешна', userId: results.insertId, role: 'user' })
     })
@@ -38,14 +38,14 @@ app.get('/api/login', (req, res) => {
 
   db.query('SELECT * FROM users WHERE login = ? and password = ?', [login, password], (err, results) => {
     if (err) {
-      return res.json({ result: false, message: 'Ошбика БД' })
+      return res.json({ result: false, message: 'Ошибка БД' })
     }
     if (results.length > 0) {
       const user = results[0]
       res.json({ result: true, message: 'Вы авторизовались', userId: user.id_user, role: user.role })
     }
     else {
-      res.json({ result: false, message: 'Неправельный логин или пароль' })
+      res.json({ result: false, message: 'Неправильный логин или пароль' })
     }
   })
 })
@@ -136,7 +136,7 @@ app.put('/api/admin/request/:id', (req, res) => {
     if (err) {
       return res.json({ result: false, message: 'Ошибка БД' })
     }
-    res.json({ result: true, message: 'Статус обнавлён' })
+    res.json({ result: true, message: 'Статус обновлён' })
   }
   )
 })

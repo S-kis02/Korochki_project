@@ -11,8 +11,8 @@ export default function App() {
     return (
         <Routes>
             <Route path="/" element={<Reg />} />
-            <Route path='/home' element={<Home />}/>
-            <Route path='/admin' element={<Admin />}/>
+            <Route path='/home' element={<Home />} />
+            <Route path='/admin' element={<Admin />} />
             <Route path="/login" element={<Login />} />
             <Route path="/new_request" element={<NewRequest />} />
         </Routes>

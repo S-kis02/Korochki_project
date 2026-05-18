@@ -57,7 +57,7 @@ export function Home() {
     }
     return (
         <div>
-            <button onClick={exit}>Выйти</button>
+            <button onClick={exit} className="btn">Выйти</button>
             <Slider />
             <h1>Ваши заявки</h1>
             <p>{message}</p>
@@ -84,7 +84,7 @@ export function Home() {
                     ))}
                 </tbody>
             </table>)}
-            <button onClick={newRequest}>Добавить заявку</button>
+            <button onClick={newRequest} className="btn">Добавить заявку</button>
         </div>
     )
 }

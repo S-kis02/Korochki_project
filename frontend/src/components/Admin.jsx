@@ -43,7 +43,7 @@ export function Admin() {
 
     return (
         <div>
-            <button onClick={exit}>Выход</button>
+            <button onClick={exit} className="btn">Выход</button>
             <h1>{message}</h1>
             {applications.length > 0 && (<table border='1' >
                 <thead>

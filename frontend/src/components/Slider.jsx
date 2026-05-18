@@ -22,9 +22,9 @@ export function Slider() {
 
     return (
         <div className="slider">
-            <button onClick={prev}>❮</button>
+            <button onClick={prev} className="btn">←</button>
             <img src={images[current]} alt={`slide ${current + 1}`} />
-            <button onClick={next}>❯</button>
+            <button onClick={next} className="btn">→</button>
         </div>
     )
 }
